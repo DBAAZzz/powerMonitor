@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>监控测试</title>
+    <script type="module" >
+        import PowerMonitor from './index.js';
+        let powerMonitor  = new PowerMonitor();
+        powerMonitor.init();
+    </script>
+</head>
+<style>
+    .button {
+        width: 100px;
+        height: 100px;
+        background: red;
+        margin-top: 50px;
+    }
+</style>
+<body>
+    <img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/12/16/16f0eac77d332a99~tplv-t2oaga2asx-no-mark:100:100:100:100.awebp" />
+    <img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/12/16/16f0eac77d332a99~tplv-t2oaga2asx-no-mark:100:100:100:100.awebp" />
+    <div class="button-container">
+        <div class="button-box">
+            <button id="buttonId" class="button" onclick="clickbutton()">click</button>
+        </div>
+    </div>
+    <button class="button" onclick="clickbutton2()"></button>
+    <img id="img">
+</body>
+<script>
+    // let imgDom = document.getElementById('img')
+    function clickbutton() {
+        console.log('点击了button')
+        new Promise(() => {
+            s
+        })
+    }
+    function clickbutton2() {
+        console.log(button)
+    }
+
+</script>
+</html>
