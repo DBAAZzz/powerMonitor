@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>监控测试</title>
-    <script type="module" >
+    <!-- <script type="module" >
         import PowerMonitor from './index.js';
-        let powerMonitor  = new PowerMonitor();
+        let powerMonitor = new PowerMonitor();
         powerMonitor.init();
-    </script>
+    </script> -->
+    <script src="./dist/bundle.js"></script>
 </head>
 <style>
     .button {
@@ -17,19 +19,22 @@
         margin-top: 50px;
     }
 </style>
+
 <body>
-    <img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/12/16/16f0eac77d332a99~tplv-t2oaga2asx-no-mark:100:100:100:100.awebp" />
-    <img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/12/16/16f0eac77d332a99~tplv-t2oaga2asx-no-mark:100:100:100:100.awebp" />
+    <img
+        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/12/16/16f0eac77d332a99~tplv-t2oaga2asx-no-mark:100:100:100:100.awebp" />
+    <img
+        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/12/16/16f0eac77d332a99~tplv-t2oaga2asx-no-mark:100:100:100:100.awebp" />
     <div class="button-container">
         <div class="button-box">
             <button id="buttonId" class="button" onclick="clickbutton()">click</button>
         </div>
     </div>
-    <button class="button" onclick="clickbutton2()"></button>
+    <button class="button" onclick="clickbutton2()">点击我</button>
     <img id="img">
 </body>
 <script>
-    // let imgDom = document.getElementById('img')
+
     function clickbutton() {
         console.log('点击了button')
         new Promise(() => {
@@ -41,4 +46,5 @@
     }
 
 </script>
+
 </html>

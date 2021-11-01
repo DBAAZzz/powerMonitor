@@ -1,4 +1,4 @@
-import config from '../config'
+import config from '../config/index.js'
 
 const UA = navigator.userAgent.toLowerCase();
 const test_UA = regexp => regexp.test(UA);

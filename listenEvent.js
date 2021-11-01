@@ -1,5 +1,5 @@
-import {getUserAgent} from "./util";
-import {handleClick, handlerError} from "./handler.js";
+import { getUserAgent } from "./util/index.js";
+import { handleClick, handlerError } from "./handler.js";
 
 function addEvent(element, type, callback) {
     if (element.addEventListener) {
@@ -20,7 +20,7 @@ export function addListenClick() {
 export function addListenNormalError() {
     addEvent(window, 'error', (error) => {
         console.log(getUserAgent());
-        let {message, filename, lineno, colno} = error;
+        let { message, filename, lineno, colno } = error;
         console.log({
             type: 'error'
         })
@@ -29,7 +29,7 @@ export function addListenNormalError() {
         //     type: 'error',
         //     message, filename, lineno, colno
         // })
-        console.table({message, filename, lineno, colno})
+        console.table({ message, filename, lineno, colno })
     })
 }
 
@@ -37,7 +37,7 @@ export function addListenNormalError() {
 export function addListenPromise() {
     addEvent(window, 'unhandledrejection', (error) => {
         console.log('promise error', error);
-        let {reason} = error;
+        let { reason } = error;
         console.log('promise error', reason.stack || reason.message)
     })
 }
