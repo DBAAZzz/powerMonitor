@@ -1,8 +1,7 @@
-import { handleClick } from './handler.js'
 import { getPerformance, getSourceInfo } from './performance.js'
 import { addListenClick, addListenPromise, addListenNormalError } from './listenEvent.js'
 
-export default class PowerMonitor {
+class PowerMonitor {
     constructor(options) {
         this.init(options)
     }
@@ -31,5 +30,4 @@ export default class PowerMonitor {
     }
 }
 
-let powerMonitor = new PowerMonitor()
-powerMonitor.init()
+console.log('PowerMonitor', PowerMonitor)

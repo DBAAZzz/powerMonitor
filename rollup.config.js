@@ -6,9 +6,11 @@ export default {
     input: ["./index.js"],
     output: {
         file: "./dist/bundle.js",
-        format: "umd",
+        format: "es",
         name: "experience"
     },
-    plugins: [resolve(), commonjs(), babel()],
-
+    plugins: [resolve(), commonjs(), babel({
+        babelHelpers: 'runtime',
+        exclude: '**/node_modules/**',
+    })],
 }

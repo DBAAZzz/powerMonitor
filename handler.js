@@ -14,8 +14,8 @@ export function normalizeNode(Node) {
 export function normalizeNodeChain(path) {
     let invalidTag = ['body', 'html', 'document']
     let chainList = [];
-    for (let i = 0; i < path.length; i++ ){
-        if(invalidTag.includes(normalizeNode(path[i]).tagName) || i >= 5) break;
+    for (let i = 0; i < path.length; i++) {
+        if (invalidTag.includes(normalizeNode(path[i]).tagName) || i >= 5) break;
         chainList.push(normalizeNode(path[i]).nodeString)
     }
     return chainList.reverse().join(' > ')
@@ -42,10 +42,11 @@ export function handleClick(event) {
 }
 
 export function handlerError(error) {
-    console.log(error instanceof ErrorEvent)
-
-    // console.log(error instanceof ReferenceError )
-    // console.log(error instanceof SyntaxError)
-    // console.log(error instanceof RangeError )
-    // console.log(error instanceof TypeError )
+    if (error instanceof ErrorEvent) {
+        console.log('JS错误')
+        let { message, filename, lineno, colno } = error;
+        console.table({ message, filename, lineno, colno })
+    } else if (error instanceof Event) {
+        console.log('资源加载错误')
+    }
 }
