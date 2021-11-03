@@ -1,12 +1,15 @@
 import { getPerformance, getSourceInfo } from './performance.js'
 import { addListenClick, addListenPromise, addListenNormalError } from './listenEvent.js'
+import { install } from './install.js'
 
-class PowerMonitor {
-    constructor(options) {
-        this.init(options)
+export default class PowerMonitor {
+    constructor() {
+        this.options = {};
+        this.init()
     }
 
-    init() {
+    init(options) {
+        this.options = options
         window.onload = () => {
             getPerformance()
             getSourceInfo();
@@ -23,11 +26,12 @@ class PowerMonitor {
 
     // 监听程序异常报错
     addListenError() {
+        // 监听JS和资源加载异常
+        addListenNormalError();
         // 监听Promise抛出的异常
         addListenPromise();
-        // 监听比较普通的异常
-        addListenNormalError();
     }
 }
 
-console.log('PowerMonitor', PowerMonitor)
+PowerMonitor.install = install
+
