@@ -25,6 +25,7 @@
             <button id="buttonId" class="button" onclick="clickbutton()">click</button>
         </div>
     </div>
+    <img src="http://139.196.100.226/images/wallhaven-8or2yj.jpg" />
     <button class="button" onclick="clickbutton2()">点击 我</button>
     <img id="img">
     <img src="/baidu.com/test.png" alt="图片加载中" />
@@ -32,8 +33,7 @@
 <script src="./dist/bundle.js"></script>
 <script>
 
-    
-
+    new PowerMonitor()
     function clickbutton() {
         console.log('点击了button')
         new Promise(() => {
@@ -45,6 +45,7 @@
         // console.log(button)
         console.error('xxxxx')
     }
+
 
 
 </script>

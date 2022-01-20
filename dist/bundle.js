@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.experience = factory());
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.PowerMonitor = factory());
 })(this, (function () { 'use strict';
 
   function _classCallCheck(instance, Constructor) {
@@ -23,79 +23,84 @@
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
-  function _arrayWithHoles(arr) {
-    if (Array.isArray(arr)) return arr;
-  }
+  function getNavTimes() {
+    var navTimes;
 
-  function _iterableToArrayLimit(arr, i) {
-    var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
-
-    if (_i == null) return;
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-
-    var _s, _e;
-
-    try {
-      for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
-        _arr.push(_s.value);
-
-        if (i && _arr.length === i) break;
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
+    if (typeof window.PerformanceNavigationTiming === 'function') {
       try {
-        if (!_n && _i["return"] != null) _i["return"]();
-      } finally {
-        if (_d) throw _e;
-      }
+        var nt2Timing = performance.getEntriesByType('navigation')[0];
+
+        if (nt2Timing) {
+          navTimes = nt2Timing;
+        }
+      } catch (err) {}
+    } else {
+      navTimes = window.performance.timing;
     }
 
-    return _arr;
+    return navTimes;
   }
-
-  function _arrayLikeToArray(arr, len) {
-    if (len == null || len > arr.length) len = arr.length;
-
-    for (var i = 0, arr2 = new Array(len); i < len; i++) {
-      arr2[i] = arr[i];
-    }
-
-    return arr2;
-  }
-
-  function _unsupportedIterableToArray(o, minLen) {
-    if (!o) return;
-    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-    var n = Object.prototype.toString.call(o).slice(8, -1);
-    if (n === "Object" && o.constructor) n = o.constructor.name;
-    if (n === "Map" || n === "Set") return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-  }
-
-  function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-
-  function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-  }
-
   function getPerformance() {
-    var navTimes = performance.getEntriesByType('navigation');
-    console.log('navTimes', navTimes);
+    var timer = null;
 
-    var _navTimes = _slicedToArray(navTimes, 1),
-        domComplete = _navTimes[0].domComplete; //  DOM数解析完成，且资源也准备就绪的时间
+    var getTimes = function getTimes() {
+      var _getNavTimes = getNavTimes(),
+          fetchStart = _getNavTimes.fetchStart,
+          domainLookupStart = _getNavTimes.domainLookupStart,
+          domainLookupEnd = _getNavTimes.domainLookupEnd,
+          connectStart = _getNavTimes.connectStart,
+          connectEnd = _getNavTimes.connectEnd,
+          domInteractive = _getNavTimes.domInteractive,
+          domComplete = _getNavTimes.domComplete,
+          loadEventEnd = _getNavTimes.loadEventEnd; // 如果 loadEventEnd 的值为 0 ，那么就定时
 
 
-    console.log('DOM数解析完成，且资源也准备就绪的时间', "\u4E00\u5171\u7528\u4E86".concat(domComplete.toFixed(2), "ms"));
+      if (loadEventEnd <= 0) {
+        timer = setTimeout(function () {
+          getTimes();
+        }, 500);
+        return;
+      }
+
+      clearTimeout(timer);
+      var times = {
+        dnsTime: domainLookupEnd - domainLookupStart,
+        // dns查询耗时
+        tcpTime: connectEnd - connectStart,
+        // TCP 连接耗时
+        analysicsTime: domComplete - domInteractive,
+        // 解析DOM耗时
+        blankTime: domInteractive - fetchStart,
+        // 白屏时间
+        firstTime: loadEventEnd - fetchStart // 首屏时间
+
+      };
+      var table = [{
+        '属性': 'dns查询耗时',
+        'ms': times.dnsTime
+      }, {
+        '属性': 'TCP 连接耗时',
+        'ms': times.tcpTime
+      }, {
+        '属性': '解析DOM耗时',
+        'ms': times.analysicsTime
+      }, {
+        '属性': '白屏时间',
+        'ms': times.blankTime
+      }, {
+        '属性': '首屏时间',
+        'ms': times.firstTime
+      }];
+      console.table(table);
+    };
+
+    getTimes();
   }
   function getSourceInfo() {
     var resourceTimes = performance.getEntriesByType('resource'); // 设置资源加载的超时时间10s
@@ -129,7 +134,8 @@
     if (timeoutList.length == 0) {
       console.log('没有资源加载超时');
     } else {
-      console.log('资源加载超时的有：', timeoutList);
+      console.warn('有资源加载超时了');
+      console.table(timeoutList);
     }
   }
 
@@ -195,6 +201,36 @@
     }
   }
 
+  var config = {
+    host: 'http://127.0.0.1',
+    port: '3000',
+    api: {
+      error: '/report/getErrorReport'
+    }
+  };
+
+  navigator.userAgent.toLowerCase();
+
+  function handleParames(params) {
+    var result = '';
+    Object.keys(params).forEach(function (key, i) {
+      result = result + "".concat(key, "=").concat(params[key]) + (i < Object.keys(params).length - 1 ? '&' : '');
+    });
+    return result;
+  }
+
+  function getApiUrl(params) {
+    return "".concat(config.host, ":").concat(config.port).concat(config.api.error, "?").concat(handleParames(params));
+  } // 使用new Image实现get请求
+
+
+  function uploadReport(parames) {
+    console.log('params', handleParames(parames));
+    var url = getApiUrl(parames);
+    var img = new Image();
+    img.src = "".concat(url);
+  }
+
   function addListenClick() {
     window.addEventListener('click', function (event) {
       handleClick(event);
@@ -205,29 +241,84 @@
     window.addEventListener('error', function (error) {
       handlerError(error);
     }, true);
-  } // 监听promise引发的错误
+  } // 监听 promise 引发的错误
 
   function addListenPromise() {
     window.addEventListener('unhandledrejection', function (error) {
       var reason = error.reason;
       console.log('promise error', reason.stack || reason.message);
     });
-  }
+  } // 监听 Vue 错误
+
   function addListenVueError(Vue) {
     Vue.config.errorHandler = function (err, vm, info) {
-      console.log('新执行VueError', err.stack.toString());
+      console.log('err', err);
+      console.log('err', err.stack.toString());
+      console.log('xxxxx', err.stack.toString().split('\n'));
+      var errorArr = err.stack.toString().split('\n');
+      console.log(errorArr[1].match(/\((.+?)\)/g));
+      uploadReport({
+        err: err.stack.toString()
+      });
       throw err;
     };
   }
 
   var _Vue;
   function install(Vue) {
-    console.log('Vue', Vue);
     if (install.installed && _Vue === Vue) return;
     install.installed = true;
     _Vue = Vue; // 监听Vue抛出的Error
 
     addListenVueError(Vue);
+    addListenVuePage();
+    window.addEventListener('load', function () {
+      getPerformance();
+    });
+  } // 监听 vue 路由变化
+
+  function addListenVuePage() {
+    history.pushState = coverFN('pushState'); // 覆盖 history 原生的 pushState 方法，通过dispatchEvent手动触发一个事件  
+
+    history.replaceState = coverFN('replaceState'); // 覆盖 history 原生的 replaceState 方法
+
+    window.addEventListener('pushState', function () {
+      console.log('触发了observeDOM');
+      observeDOM(); // getPerformance()
+    });
+    window.addEventListener('replaceState', function () {// getPerformance()
+    });
+  } // 覆盖原生的方法
+
+
+  function coverFN(type) {
+    var original = history[type];
+    return function () {
+      var rv = original.apply(this, arguments);
+      var e = new Event(type);
+      e.arguments = arguments;
+      window.dispatchEvent(e);
+      return rv;
+    };
+  } // 通过 MutationObserver 监听 DOM 的变化
+
+
+  function observeDOM() {
+    // 监听 body 标签的 DOM 变化
+    var targetNode = document.getElementsByTagName('body')[0];
+    var observer = new MutationObserver(function (mutationsList, observer) {
+      console.log('mutationsList', mutationsList); // 之后，可停止观察
+
+      observer.disconnect();
+    });
+    observer.observe(targetNode, {
+      attributes: true,
+      // 设为 true 以观察受监视元素的属性值变更。
+      childList: true,
+      // 设为 ture 以目标节点添加删除或删除新的子节点
+      subtree: true // 设为 true 以将监视范围扩展至目标节点整个节点树中的所有节点
+
+    });
   }
 
   var PowerMonitor = /*#__PURE__*/function () {
@@ -241,18 +332,14 @@
     _createClass(PowerMonitor, [{
       key: "init",
       value: function init(options) {
-        var _this = this;
-
         this.options = options;
+        window.addEventListener('load', function () {
+          getPerformance(); // 监听资源加载情况
 
-        window.onload = function () {
-          getPerformance();
           getSourceInfo();
-
-          _this.addListenEvent();
-
-          _this.addListenError();
-        };
+        });
+        this.addListenEvent();
+        this.addListenError();
       } // 监听用户交互事件
 
     }, {

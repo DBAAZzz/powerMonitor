@@ -15,7 +15,7 @@ export function addListenNormalError() {
     }, true)
 }
 
-// 监听promise引发的错误
+// 监听 promise 引发的错误
 export function addListenPromise() {
     window.addEventListener('unhandledrejection', (error) => {
         let { reason } = error;
@@ -23,6 +23,7 @@ export function addListenPromise() {
     })
 }
 
+// 监听 Vue 错误
 export function addListenVueError(Vue) {
     Vue.config.errorHandler = (err, vm, info) => {
         console.log('err', err)

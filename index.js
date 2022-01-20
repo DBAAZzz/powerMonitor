@@ -10,12 +10,15 @@ export default class PowerMonitor {
 
     init(options) {
         this.options = options
-        window.onload = () => {
+
+        window.addEventListener('load', () => {
             getPerformance()
+            // 监听资源加载情况
             getSourceInfo();
-            this.addListenEvent();
-            this.addListenError();
-        }
+        })
+
+        this.addListenEvent();
+        this.addListenError();
     }
 
     // 监听用户交互事件
@@ -34,4 +37,3 @@ export default class PowerMonitor {
 }
 
 PowerMonitor.install = install
-

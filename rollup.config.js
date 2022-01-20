@@ -5,9 +5,10 @@ import babel from "@rollup/plugin-babel";
 export default {
     input: ["./index.js"],
     output: {
-        file: "../simple/src/utils/bundle.js",
+        // file: "./dist/bundle.js",
+        file: "../simple-router/src/utils/bundle.js",
         format: "umd",
-        name: "experience"
+        name: "PowerMonitor" // 生成包的名字
     },
     plugins: [resolve(), commonjs(), babel({
         babelHelpers: 'runtime',

@@ -1,9 +1,66 @@
+export function getNavTimes() {
+    let navTimes
+
+    if (typeof window.PerformanceNavigationTiming === 'function') {
+        try {
+            var nt2Timing = performance.getEntriesByType('navigation')[0]
+            if (nt2Timing) {
+                navTimes = nt2Timing
+            }
+        } catch (err) {
+        }
+    } else {
+        navTimes = window.performance.timing
+    }
+
+    return navTimes
+}
+
 export function getPerformance() {
-    const navTimes = performance.getEntriesByType('navigation')
-    console.log('navTimes', navTimes)
-    const [{ domComplete }] = navTimes;
-    //  DOM数解析完成，且资源也准备就绪的时间
-    console.log('DOM数解析完成，且资源也准备就绪的时间', `一共用了${domComplete.toFixed(2)}ms`)
+
+    let timer = null
+
+    let getTimes = () => {
+        const {
+            fetchStart,
+            domainLookupStart,
+            domainLookupEnd,
+            connectStart,
+            connectEnd,
+            domInteractive,
+            domComplete,
+            loadEventEnd
+        } = getNavTimes();
+        // 如果 loadEventEnd 的值为 0 ，那么就定时
+        if (loadEventEnd <= 0) {
+            timer = setTimeout(() => {
+                getTimes()
+            }, 500);
+            return
+        }
+
+        
+        clearTimeout(timer)
+
+        let times = {
+            dnsTime: domainLookupEnd - domainLookupStart, // dns查询耗时
+            tcpTime: connectEnd - connectStart, // TCP 连接耗时
+            analysicsTime: domComplete - domInteractive, // 解析DOM耗时
+            blankTime: domInteractive - fetchStart, // 白屏时间
+            firstTime: loadEventEnd - fetchStart, // 首屏时间
+        }
+
+        let table = [
+            { '属性': 'dns查询耗时', 'ms': times.dnsTime },
+            { '属性': 'TCP 连接耗时', 'ms': times.tcpTime },
+            { '属性': '解析DOM耗时', 'ms': times.analysicsTime },
+            { '属性': '白屏时间', 'ms': times.blankTime },
+            { '属性': '首屏时间', 'ms': times.firstTime }
+        ]
+        console.table(table)
+    }
+
+    getTimes()
 }
 
 export function getSourceInfo() {
@@ -27,6 +84,7 @@ export function getSourceInfo() {
     if (timeoutList.length == 0) {
         console.log('没有资源加载超时')
     } else {
-        console.log('资源加载超时的有：', timeoutList)
+        console.warn('有资源加载超时了')
+        console.table(timeoutList)
     }
 }
