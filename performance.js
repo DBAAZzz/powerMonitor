@@ -31,6 +31,7 @@ export function getPerformance() {
             domComplete,
             loadEventEnd
         } = getNavTimes();
+        console.log('loadEventEnd', loadEventEnd)
         // 如果 loadEventEnd 的值为 0 ，那么就定时
         if (loadEventEnd <= 0) {
             timer = setTimeout(() => {
