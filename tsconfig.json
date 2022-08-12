@@ -7,7 +7,6 @@
     ],
     "baseUrl": "./", 
     "paths": {
-      "@types/*": ["types/*"]
     },
     "allowJs": false, // 允许编译JavaScript文件
     "module": "esnext",
@@ -17,6 +16,7 @@
     "declaration": true, // 生成相应的 .d.ts文件。
     "sourceMap": false,
     "skipLibCheck": true,
+    "suppressImplicitAnyIndexErrors": true,
     "outDir": "dist/"
   }
 }

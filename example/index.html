@@ -14,6 +14,25 @@
         margin-top: 50px;
     }
 </style>
+<script src="../dist/bundle.js"></script>
+<script>
+    new PowerMonitor()
+    function clickbutton() {
+        console.log('点击了button')
+        new Promise(() => {
+            s
+        })
+    }
+
+    function clickbutton2() {
+        // console.log(button)
+        console.error('xxxxx')
+    }
+
+    const po = observe('paint', (entry) => {
+        console.log('entry', entry)
+    })
+</script>
 
 <body>
     <img
@@ -30,24 +49,6 @@
     <img id="img">
     <img src="/baidu.com/test.png" alt="图片加载中" />
 </body>
-<script src="./dist/bundle.js"></script>
-<script>
-    console.log('PowerMonitor', PowerMonitor)
-    new PowerMonitor()
-    function clickbutton() {
-        console.log('点击了button')
-        new Promise(() => {
-            s
-        })
-    }
 
-    function clickbutton2() {
-        // console.log(button)
-        console.error('xxxxx')
-    }
-
-
-
-</script>
 
 </html>

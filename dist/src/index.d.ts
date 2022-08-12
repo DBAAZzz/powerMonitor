@@ -1,4 +1,6 @@
+import { Options } from '../types/index';
 export default class PowerMonitor {
-    constructor();
+    options: Options;
+    constructor(options?: Options);
     init(): void;
 }

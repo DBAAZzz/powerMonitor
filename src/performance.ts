@@ -1,6 +1,10 @@
+import { TimeoutList } from 'types/index'
+import observe from 'utils/observe'
+import { isPerformanceObserverSupported, isPerformanceSupported } from 'utils/index'
+
 export function getNavTimes() {
   let navTimes: any
-
+  // 判断浏览器是否支持该API
   if (typeof window.PerformanceNavigationTiming === 'function') {
     try {
       var nt2Timing = performance.getEntriesByType('navigation')[0]
@@ -16,6 +20,9 @@ export function getNavTimes() {
   return navTimes
 }
 
+/**
+ * 获取页面性能
+ */
 export function getPerformance() {
   let timer: number | undefined
 
@@ -61,6 +68,42 @@ export function getPerformance() {
   getTimes()
 }
 
+/**
+ * First Contentful Paint
+ * 浏览器开始渲染 dom 元素，包括任何 text、images、非空白 canvas 和 svg
+ * @returns 
+ */
+export function getFCP(): Promise<PerformanceEntry> {
+  return new Promise((resolve, reject) => {
+    if (!isPerformanceObserverSupported()) {
+      if (!isPerformanceSupported()) {
+        reject(new Error('browser do not support performance'))
+      } else {
+        const [entry] = performance.getEntriesByName('first-contentful-paint')
+
+        if (entry) {
+          resolve(entry)
+        }
+
+        reject(new Error('browser has no fcp'))
+      }
+    } else {
+      const entryHandler = (entry: PerformanceEntry) => {
+        if (entry.name === 'first-contentful-paint') {
+          if (po) {
+            po.disconnect()
+          }
+          resolve(entry)
+        }
+      }
+
+      const po = observe('paint', entryHandler)
+    }
+  })
+}
+/**
+ * 获取资源的加载情况
+ */
 export function getSourceInfo() {
   const resourceTimes: Partial<PerformanceResourceTiming>[] = performance.getEntriesByType('resource');
   // 设置资源加载的超时时间10s
@@ -69,7 +112,7 @@ export function getSourceInfo() {
     return Number((Number(endTime) - Number(startTime)).toFixed(2));
   }
   // 超时列表
-  let timeoutList = [];
+  let timeoutList: TimeoutList[] = [];
   for (let i = 0; i < resourceTimes.length; i++) {
     if (getLoadTime(resourceTimes[i].startTime, resourceTimes[i].responseEnd) > TIMEOUT) {
       let { name, nextHopProtocol, startTime, responseEnd, initiatorType } = resourceTimes[i];
@@ -91,5 +134,8 @@ export function initPerformance() {
   window.addEventListener('load', () => {
     getPerformance()
     getSourceInfo()
+    getFCP().then((res) => {
+      console.log('getFCP', res)
+    })
   })
 }
