@@ -8,6 +8,14 @@ export const isPerformanceSupported = (): boolean => {
   return !!window.performance && !!window.performance.getEntriesByType && !!window.performance.mark
 }
 
+export const roundByFour = (num: number, digits = 4) => {
+  try {
+    return parseFloat(num.toFixed(digits))
+  } catch (err) {
+    return num
+  }
+}
+
 // 处理单个节点
 export function normalizeNode(Node: Element) {
   let nodeName = Node.nodeName.toLowerCase();

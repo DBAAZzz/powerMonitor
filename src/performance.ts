@@ -1,6 +1,6 @@
 import { TimeoutList } from 'types/index'
 import observe from 'utils/observe'
-import { isPerformanceObserverSupported, isPerformanceSupported } from 'utils/index'
+import { isPerformanceObserverSupported, isPerformanceSupported, roundByFour } from 'utils/index'
 
 export function getNavTimes() {
   let navTimes: any
@@ -101,6 +101,125 @@ export function getFCP(): Promise<PerformanceEntry> {
     }
   })
 }
+
+/** 
+ * layout-shift
+ * 最大内容绘画度量标准报告视口内可见的最大图像或文本块的渲染时间
+ * @returns 
+ */
+export function getLCP(): Promise<PerformanceEntry> {
+  return new Promise((resolve, reject) => {
+    const entryHandler = (entry: PerformanceEntry) => {
+      if (entry.name === 'largest-contentful-paint') {
+        if (po) {
+          po.disconnect()
+        }
+        resolve(entry)
+      }
+    }
+
+    const po = observe('largest-contentful-paint', entryHandler)
+  })
+}
+
+/**
+ * First Input Delay
+ * FID 测量的是当用户第一次在页面上交互的时候，到浏览器实际开始处理这个事件的时间
+ * @returns 
+ */
+export function getFID(): Promise<PerformanceEntry> {
+  return new Promise((resolve, reject) => {
+    const entryHandler = (entry: PerformanceEntry) => {
+      if (po) {
+        po.disconnect()
+      }
+      resolve(entry)
+    }
+
+    const po = observe('first-input', entryHandler)
+  })
+}
+
+/**
+ * First Paint
+ * 首次绘制，即浏览器绘制页面第一个像素的时间
+ * @returns 
+ */
+export function getFP(): Promise<PerformanceEntry> | undefined {
+  return new Promise((resolve, reject) => {
+    if (!isPerformanceObserverSupported()) {
+      if (!isPerformanceSupported()) {
+        reject(new Error('browser do not support performance'))
+      } else {
+        const [entry] = performance.getEntriesByName('first-paint')
+
+        if (entry) {
+          resolve(entry)
+        }
+
+        reject(new Error('browser has no fp'))
+      }
+    } else {
+      const entryHandler = (entry: PerformanceEntry) => {
+        if (entry.name === 'first-paint') {
+          if (po) {
+            po.disconnect()
+          }
+          resolve(entry)
+        }
+      }
+
+      const po = observe('paint', entryHandler)
+    }
+  })
+}
+
+/**
+ * 使用 requestAnimationFrame 来计算页面的 fps
+ * @param count 
+ * @returns 
+ */
+export function calculateFps(count: number): Promise<number> {
+  return new Promise((resolve) => {
+    let frame = 0
+    let lastFrameTime = +new Date()
+    const fpsQueue: any[] = []
+    let timerId: number
+
+    const calculate = () => {
+      const now = +new Date()
+
+      frame = frame + 1
+
+      if (now > 1000 + lastFrameTime) {
+        const fps = Math.round(frame / ((now - lastFrameTime) / 1000))
+        fpsQueue.push(fps)
+        frame = 0
+        lastFrameTime = +new Date()
+
+        if (fpsQueue.length > count) {
+          cancelAnimationFrame(timerId)
+          resolve(
+            roundByFour(
+              fpsQueue.reduce((sum, fps) => {
+                sum = sum + fps
+                return sum
+              }, 0) / fpsQueue.length, 
+              2
+            )
+          )
+        } else {
+          timerId = requestAnimationFrame(calculate)
+        }
+      } else {
+        timerId = requestAnimationFrame(calculate)
+      }
+    }
+
+    calculate()
+  })
+}
+
 /**
  * 获取资源的加载情况
  */
@@ -136,6 +255,18 @@ export function initPerformance() {
     getSourceInfo()
     getFCP().then((res) => {
       console.log('getFCP', res)
+    })
+    getLCP().then((res) => {
+      console.log('getLCP', res)
+    })
+    getFID().then((res) => {
+      console.log('getFID', res)
+    })
+    getFP()?.then((res) => {
+      console.log('getFP', res)
+    })
+    calculateFps(20).then((res) => {
+      console.log('calculateFps', res)
     })
   })
 }
