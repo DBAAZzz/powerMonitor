@@ -10,3 +10,8 @@ export interface Options {
 export interface TimeoutList extends Partial<PerformanceResourceTiming> {
   loadTime?: number
 }
+
+export interface LayoutShift extends PerformanceEntry {
+  value: number
+  hadRecentInput: boolean
+}

@@ -1,13 +1,5 @@
 export const UA = navigator.userAgent.toLowerCase();
 
-export const isPerformanceObserverSupported = (): boolean => {
-  return !!window.PerformanceObserver
-}
-
-export const isPerformanceSupported = (): boolean => {
-  return !!window.performance && !!window.performance.getEntriesByType && !!window.performance.mark
-}
-
 export const roundByFour = (num: number, digits = 4) => {
   try {
     return parseFloat(num.toFixed(digits))

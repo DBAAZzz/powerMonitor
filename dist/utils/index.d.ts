@@ -1,6 +1,4 @@
 export declare const UA: string;
-export declare const isPerformanceObserverSupported: () => boolean;
-export declare const isPerformanceSupported: () => boolean;
 export declare const roundByFour: (num: number, digits?: number) => number;
 export declare function normalizeNode(Node: Element): {
     tagName: string;

@@ -1,6 +1,6 @@
 import { TimeoutList } from 'types/index'
 import observe from 'utils/observe'
-import { isPerformanceObserverSupported, isPerformanceSupported, roundByFour } from 'utils/index'
+import { isPerformanceObserverSupported, isPerformanceSupported } from 'utils/supported'
 
 export function getNavTimes() {
   let navTimes: any
@@ -35,6 +35,7 @@ export function getPerformance() {
       connectEnd,
       domInteractive,
       domComplete,
+      responseEnd,
       loadEventEnd
     } = getNavTimes();
     // 如果 loadEventEnd 的值为 0 ，那么就定时
@@ -51,7 +52,7 @@ export function getPerformance() {
       dnsTime: domainLookupEnd - domainLookupStart, // dns查询耗时
       tcpTime: connectEnd - connectStart, // TCP 连接耗时
       analysicsTime: domComplete - domInteractive, // 解析DOM耗时
-      blankTime: domInteractive - fetchStart, // 白屏时间
+      domParse: domInteractive - responseEnd, // dom 解析时间
       firstTime: loadEventEnd - fetchStart, // 首屏时间
     }
 
@@ -59,7 +60,7 @@ export function getPerformance() {
       { '属性': 'dns查询耗时', 'ms': times.dnsTime },
       { '属性': 'TCP 连接耗时', 'ms': times.tcpTime },
       { '属性': '解析DOM耗时', 'ms': times.analysicsTime },
-      { '属性': '白屏时间', 'ms': times.blankTime },
+      { '属性': 'DOM 解析时间', 'ms': times.domParse },
       { '属性': '首屏时间', 'ms': times.firstTime }
     ]
     console.table(table)
@@ -69,7 +70,7 @@ export function getPerformance() {
 }
 
 /**
- * First Contentful Paint
+ * First Contentful Paint （最大内容绘制）
  * 浏览器开始渲染 dom 元素，包括任何 text、images、非空白 canvas 和 svg
  * @returns 
  */
@@ -110,7 +111,7 @@ export function getFCP(): Promise<PerformanceEntry> {
 export function getLCP(): Promise<PerformanceEntry> {
   return new Promise((resolve, reject) => {
     const entryHandler = (entry: PerformanceEntry) => {
-      if (entry.name === 'largest-contentful-paint') {
+      if (entry.entryType === 'largest-contentful-paint') {
         if (po) {
           po.disconnect()
         }
@@ -123,7 +124,7 @@ export function getLCP(): Promise<PerformanceEntry> {
 }
 
 /**
- * First Input Delay
+ * First Input Delay （首次输入延迟）
  * FID 测量的是当用户第一次在页面上交互的时候，到浏览器实际开始处理这个事件的时间
  * @returns 
  */
@@ -175,48 +176,30 @@ export function getFP(): Promise<PerformanceEntry> | undefined {
 }
 
 /**
- * 使用 requestAnimationFrame 来计算页面的 fps
- * @param count 
+ * Cumulative Layout Shift （累计布局偏移）
+ * CLS 是 Google 衡量网页加载和交互时发生的布局偏移总量，即意外移动网页主要内容的布局偏移数量
+ * Google 建议 CLS 分数为 0.1 或 耕地
+ * @param cls 
  * @returns 
  */
-export function calculateFps(count: number): Promise<number> {
-  return new Promise((resolve) => {
-    let frame = 0
-    let lastFrameTime = +new Date()
-    const fpsQueue: any[] = []
-    let timerId: number
-
-    const calculate = () => {
-      const now = +new Date()
-
-      frame = frame + 1
-
-      if (now > 1000 + lastFrameTime) {
-        const fps = Math.round(frame / ((now - lastFrameTime) / 1000))
-        fpsQueue.push(fps)
-        frame = 0
-        lastFrameTime = +new Date()
-
-        if (fpsQueue.length > count) {
-          cancelAnimationFrame(timerId)
-          resolve(
-            roundByFour(
-              fpsQueue.reduce((sum, fps) => {
-                sum = sum + fps
-                return sum
-              }, 0) / fpsQueue.length, 
-              2
-            )
-          )
-        } else {
-          timerId = requestAnimationFrame(calculate)
+export function getCLS(cls: any): Promise<PerformanceObserver> | undefined {
+  return new Promise((resove, reject) => {
+    if (!isPerformanceObserverSupported()) {
+      reject('browser do not support performanceObserver')
+    } else {
+      const entryHandler = (entry: any) => {
+        if (po) {
+          po.disconnect()
         }
-      } else {
-        timerId = requestAnimationFrame(calculate)
+        if (!entry.hadRecentInput) {
+          cls.value += entry.value
+        }
+        resove(cls)
       }
+      const po = observe('layout-shift', entryHandler)
     }
 
-    calculate()
+
   })
 }
 
@@ -265,8 +248,8 @@ export function initPerformance() {
     getFP()?.then((res) => {
       console.log('getFP', res)
     })
-    calculateFps(20).then((res) => {
-      console.log('calculateFps', res)
+    getCLS({ value: 0 })?.then((res) => {
+      console.log('getCLS', res)
     })
   })
 }
