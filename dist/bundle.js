@@ -402,10 +402,36 @@
       });
   }
 
+  function proxyXhr(beforeHandler, afterHandler) {
+      if ('XMLHttpRequest' in window && !window.__proxy_xhr__) {
+          var origin_1 = window.XMLHttpRequest;
+          var originOpen_1 = origin_1.prototype.open;
+          window.__proxy_xhr__ = true;
+          origin_1.prototype.open = function () {
+              var args = [];
+              for (var _i = 0; _i < arguments.length; _i++) {
+                  args[_i] = arguments[_i];
+              }
+              var startTime = +new Date();
+              beforeHandler && beforeHandler(args[1]);
+              originOpen_1.apply(this, args);
+              this.addEventListener('loadend', function () {
+                  var endTime = +new Date();
+                  console.table(args);
+                  console.log("\u8BF7\u6C42\u63A5\u53E3\u54CD\u5E94\u65F6\u95F4\u4E3A\uFF1A".concat(endTime - startTime, "ms"));
+                  afterHandler && afterHandler(args[1]);
+              });
+          };
+      }
+  }
+
   function addListenClickEvent() {
       window.addEventListener('click', function (event) {
           handleClick(event);
       });
+  }
+  function initProxy() {
+      proxyXhr();
   }
 
   var PowerMonitor = /** @class */ (function () {
@@ -417,6 +443,7 @@
           initClientInfo();
           initPerformance();
           initErrorListen();
+          initProxy();
           options.listenClick && addListenClickEvent();
       }
       PowerMonitor.prototype.init = function () {

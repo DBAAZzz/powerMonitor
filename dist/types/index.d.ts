@@ -1,3 +1,8 @@
+declare global {
+    interface Window {
+        __proxy_xhr__: boolean;
+    }
+}
 export interface PerformanceEntryHandler {
     (entry: PerformanceEntry): void;
 }

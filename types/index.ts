@@ -2,6 +2,9 @@ declare global {
   interface Window {
     __proxy_xhr__: boolean
   }
+  interface Window {
+    __monitor_fetch__: boolean
+  }
 }
 
 export interface PerformanceEntryHandler {

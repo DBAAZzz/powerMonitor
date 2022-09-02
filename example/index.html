@@ -14,6 +14,7 @@
         margin-top: 50px;
     }
 </style>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="../dist/bundle.js"></script>
 <script>
     new PowerMonitor()
@@ -26,7 +27,14 @@
 
     function clickbutton2() {
         // console.log(button)
-        console.error('xxxxx')
+        axios({
+            method: 'post',
+            url: 'https://www.fastmock.site/mock/4b3c9fee7356520e559c0f14b28bb844/test/getListByName',
+            data: {
+                firstName: 'Fred',
+                lastName: 'Flintstone'
+            }
+        });
     }
 
     const po = observe('paint', (entry) => {
@@ -35,8 +43,7 @@
 </script>
 
 <body>
-    <img
-        src="https://w.wallhaven.cc/full/l3/wallhaven-l3kkzq.jpg" />
+    <img src="https://w.wallhaven.cc/full/l3/wallhaven-l3kkzq.jpg" />
     <img
         src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/12/16/16f0eac77d332a99~tplv-t2oaga2asx-no-mark:100:100:100:100.awebp" />
     <div class="button-container">

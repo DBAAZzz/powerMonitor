@@ -12,7 +12,6 @@
     "module": "esnext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
     "declaration": true, // 生成相应的 .d.ts文件。
     "sourceMap": false,
     "skipLibCheck": true,

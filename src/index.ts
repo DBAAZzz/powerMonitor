@@ -1,7 +1,7 @@
 import { initPerformance } from './performance'
 import { initErrorListen } from './error'
 import { initClientInfo } from './clientInfo'
-import { addListenClickEvent } from './hacker'
+import { addListenClickEvent, initProxy } from './hacker'
 import { Options } from '../types/index'
 
 export default class PowerMonitor {
@@ -14,6 +14,7 @@ export default class PowerMonitor {
     initClientInfo()
     initPerformance()
     initErrorListen()
+    initProxy()
     options.listenClick && addListenClickEvent()
   }
 

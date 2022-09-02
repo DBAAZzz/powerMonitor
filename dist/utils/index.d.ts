@@ -8,7 +8,7 @@ export declare function normalizeNodeChain(path: any): string;
 export declare function handleClick(event: any): {
     type: string;
     dom: string;
-} | undefined;
+};
 /**
  * 将对象转化成字符串
  * { a: 1, b: 2 } => a=1&b=2
