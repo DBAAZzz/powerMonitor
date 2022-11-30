@@ -40,7 +40,7 @@ export function getPerformance() {
     } = getNavTimes();
     // 如果 loadEventEnd 的值为 0 ，那么就定时
     if (loadEventEnd <= 0) {
-      timer = setTimeout(() => {
+      timer = window.setTimeout(() => {
         getTimes()
       }, 500);
       return
