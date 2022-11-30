@@ -15,7 +15,7 @@
     }
 </style>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="../dist/bundle.js"></script>
+<script src="../dist/powerMonitor.min.js"></script>
 <script>
     new PowerMonitor()
     function clickbutton() {
@@ -36,10 +36,6 @@
             }
         });
     }
-
-    const po = observe('paint', (entry) => {
-        console.log('entry', entry)
-    })
 </script>
 
 <body>
