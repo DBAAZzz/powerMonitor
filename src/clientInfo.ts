@@ -7,8 +7,8 @@ export function getNetWork() {
     console.warn('不支持 navigator，无法获取网络情况！')
     return
   }
-  let { connection } = window.navigator
-  console.log('网络情况为：', connection)
+  
+  console.log('网络情况为：', navigator['connection'])
 }
 
 // 获取设备信息

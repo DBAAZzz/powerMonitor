@@ -1,0 +1,47 @@
+{
+
+  "mainEntryPointFilePath": "<projectFolder>/temp/src/index.d.ts",
+  "compiler": {
+    "tsconfigFilePath": "<projectFolder>/tsconfig.json"
+  },
+  "tsdocMetadata": {
+    "enabled": false
+  },
+  "messages": {
+    "compilerMessageReporting": {
+      "default": {
+        "logLevel": "none"
+      }
+    },
+    "extractorMessageReporting": {
+      "default": {
+        "logLevel": "warning",
+        "addToApiReportFile": true
+      },
+      "ae-missing-release-tag": {
+        "logLevel": "none"
+      },
+      "ae-forgotten-export": {
+        "logLevel": "none"
+      }
+    },
+    "tsdocMessageReporting": {
+      "default": {
+        "logLevel": "none"
+      }
+    }
+  },
+  "apiReport": {
+    // 是否生成 API 报告，一般用不到，关掉
+    "enabled": false
+  },
+  "docModel": {
+    // 是否生成 doc model 文档，一般用不到，关掉
+    "enabled": false
+  },
+  "dtsRollup": {
+    "enabled": true,
+    // 汇总 *.d.ts 文件后输出的目录，有用而且是关键配置
+    "untrimmedFilePath": "<projectFolder>/dist/index.d.ts"
+  }
+}

@@ -23,7 +23,7 @@ export function normalizeNode(Node: Element) {
 // 处理节点链
 export function normalizeNodeChain(path: any) {
   let invalidTag = ['body', 'html', 'document']
-  let chainList = [];
+  let chainList: any[] = [];
   for (let i = 0; i < path.length; i++) {
     if (invalidTag.includes(normalizeNode(path[i]).tagName) || i >= 5) break;
     chainList.push(normalizeNode(path[i]).nodeString)
