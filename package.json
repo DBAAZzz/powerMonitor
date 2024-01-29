@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/powerMonitor.common.js",
   "scripts": {
+    "dev": "node_modules/.bin/rollup -w -c ./rollup.config.mjs --bundleConfigAsCjs",
     "build": "rimraf dist && run-s build-bundle build-types",
     "build-bundle": "node_modules/.bin/rollup -c ./rollup.config.mjs --bundleConfigAsCjs",
     "build-types": "run-s build-temp build-api-types",
