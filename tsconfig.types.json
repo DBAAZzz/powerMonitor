@@ -2,34 +2,25 @@
   /* 访问 https://aka.ms/tsconfig.json 以阅读有关此文件的更多信息 */
   "compilerOptions": {
     /* 基本选项 */
-    "lib": [
-      "es6",
-      "dom",
-      "es2017"
-    ],
-    "module": "ESNext", /* 指定模块代码生成：“none”、“commonjs”、“amd”、“system”、“umd”、“es2015”、“es2020”或“ESNext”。 */
-    "declaration": true, /* 生成相应的 .d.ts 文件。 */
-    "allowJs": true, /* 允许编译JavaScript文件 */
-    "sourceMap": false, /* 生成相应的“.map”文件。 */
-    "emitDeclarationOnly": true,  /* 仅生成.d.ts文件，不生成.js文件 */
+    "lib": ["es6", "dom", "es2017"],
+    "module": "ESNext" /* 指定模块代码生成：“none”、“commonjs”、“amd”、“system”、“umd”、“es2015”、“es2020”或“ESNext”。 */,
+    "declaration": true /* 生成相应的 .d.ts 文件。 */,
+    "allowJs": true /* 允许编译JavaScript文件 */,
+    "sourceMap": false /* 生成相应的“.map”文件。 */,
+    "emitDeclarationOnly": true /* 仅生成.d.ts文件，不生成.js文件 */,
     "outDir": "./temp",
 
     /* 严格的类型检查选项 */
-    "strictNullChecks": true, /* 启用严格的空（undefined、null）检查，可以防止“未定义不是对象”。 建议开启*/
+    "strictNullChecks": true /* 启用严格的空（undefined、null）检查，可以防止“未定义不是对象”。 建议开启*/,
 
     /* 模块分辨率选项 */
     // "moduleResolution": "node", /* 指定模块解析策略：'node' (Node.js) 或 'classic' (TypeScript pre-1.6)。 */
-    "baseUrl": "./", /* 解析非绝对模块名称的基目录。 */
-    "esModuleInterop": true, /* 通过为所有导入创建命名空间对象，在 CommonJS 和 ES 模块之间启用发射互操作性。 暗示“allowSyntheticDefaultImports”。 */
+    "baseUrl": "./" /* 解析非绝对模块名称的基目录。 */,
+    "esModuleInterop": true /* 通过为所有导入创建命名空间对象，在 CommonJS 和 ES 模块之间启用发射互操作性。 暗示“allowSyntheticDefaultImports”。 */,
 
     /* 高级选项 */
-    "skipLibCheck": true, /* 跳过声明文件的类型检查。 */
-    "forceConsistentCasingInFileNames": true, /* 禁止对同一文件的大小写不一致的引用。 */
+    "skipLibCheck": true /* 跳过声明文件的类型检查。 */,
+    "forceConsistentCasingInFileNames": true /* 禁止对同一文件的大小写不一致的引用。 */
   },
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts",
-    "rollup.config.mjs",
-    "dist"
-  ]
+  "exclude": ["node_modules", "**/*.spec.ts", "rollup.config.mjs", "dist"]
 }

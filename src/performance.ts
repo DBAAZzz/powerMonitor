@@ -11,8 +11,7 @@ export function getNavTimes() {
       if (nt2Timing) {
         navTimes = nt2Timing
       }
-    } catch (err) {
-    }
+    } catch (err) {}
   } else {
     navTimes = window.performance.timing
   }
@@ -27,22 +26,12 @@ export function getPerformance() {
   let timer: number | undefined
 
   let getTimes = () => {
-    const {
-      fetchStart,
-      domainLookupStart,
-      domainLookupEnd,
-      connectStart,
-      connectEnd,
-      domInteractive,
-      domComplete,
-      responseEnd,
-      loadEventEnd
-    } = getNavTimes();
+    const { fetchStart, domainLookupStart, domainLookupEnd, connectStart, connectEnd, domInteractive, domComplete, responseEnd, loadEventEnd } = getNavTimes()
     // 如果 loadEventEnd 的值为 0 ，那么就定时
     if (loadEventEnd <= 0) {
       timer = window.setTimeout(() => {
         getTimes()
-      }, 500);
+      }, 500)
       return
     }
 
@@ -53,15 +42,15 @@ export function getPerformance() {
       tcpTime: connectEnd - connectStart, // TCP 连接耗时
       analysicsTime: domComplete - domInteractive, // 解析DOM耗时
       domParse: domInteractive - responseEnd, // dom 解析时间
-      firstTime: loadEventEnd - fetchStart, // 首屏时间
+      firstTime: loadEventEnd - fetchStart // 首屏时间
     }
 
     let table = [
-      { '属性': 'dns查询耗时', 'ms': times.dnsTime },
-      { '属性': 'TCP 连接耗时', 'ms': times.tcpTime },
-      { '属性': '解析DOM耗时', 'ms': times.analysicsTime },
-      { '属性': 'DOM 解析时间', 'ms': times.domParse },
-      { '属性': '首屏时间', 'ms': times.firstTime }
+      { 属性: 'dns查询耗时', ms: times.dnsTime },
+      { 属性: 'TCP 连接耗时', ms: times.tcpTime },
+      { 属性: '解析DOM耗时', ms: times.analysicsTime },
+      { 属性: 'DOM 解析时间', ms: times.domParse },
+      { 属性: '首屏时间', ms: times.firstTime }
     ]
     console.table(table)
   }
@@ -72,7 +61,7 @@ export function getPerformance() {
 /**
  * First Contentful Paint （最大内容绘制）
  * 浏览器开始渲染 dom 元素，包括任何 text、images、非空白 canvas 和 svg
- * @returns 
+ * @returns
  */
 export function getFCP(): Promise<PerformanceEntry> {
   return new Promise((resolve, reject) => {
@@ -103,10 +92,10 @@ export function getFCP(): Promise<PerformanceEntry> {
   })
 }
 
-/** 
+/**
  * layout-shift
  * 最大内容绘画度量标准报告视口内可见的最大图像或文本块的渲染时间
- * @returns 
+ * @returns
  */
 export function getLCP(): Promise<PerformanceEntry> {
   return new Promise((resolve, reject) => {
@@ -126,7 +115,7 @@ export function getLCP(): Promise<PerformanceEntry> {
 /**
  * First Input Delay （首次输入延迟）
  * FID 测量的是当用户第一次在页面上交互的时候，到浏览器实际开始处理这个事件的时间
- * @returns 
+ * @returns
  */
 export function getFID(): Promise<PerformanceEntry> {
   return new Promise((resolve, reject) => {
@@ -144,7 +133,7 @@ export function getFID(): Promise<PerformanceEntry> {
 /**
  * First Paint
  * 首次绘制，即浏览器绘制页面第一个像素的时间
- * @returns 
+ * @returns
  */
 export function getFP(): Promise<PerformanceEntry> | undefined {
   return new Promise((resolve, reject) => {
@@ -179,8 +168,8 @@ export function getFP(): Promise<PerformanceEntry> | undefined {
  * Cumulative Layout Shift （累计布局偏移）
  * CLS 是 Google 衡量网页加载和交互时发生的布局偏移总量，即意外移动网页主要内容的布局偏移数量
  * Google 建议 CLS 分数为 0.1 或 耕地
- * @param cls 
- * @returns 
+ * @param cls
+ * @returns
  */
 export function getCLS(cls: any): Promise<PerformanceObserver> | undefined {
   return new Promise((resove, reject) => {
@@ -198,8 +187,6 @@ export function getCLS(cls: any): Promise<PerformanceObserver> | undefined {
       }
       const po = observe('layout-shift', entryHandler)
     }
-
-
   })
 }
 
@@ -207,21 +194,23 @@ export function getCLS(cls: any): Promise<PerformanceObserver> | undefined {
  * 获取资源的加载情况
  */
 export function getSourceInfo() {
-  const resourceTimes: Partial<PerformanceResourceTiming>[] = performance.getEntriesByType('resource');
+  const resourceTimes: Partial<PerformanceResourceTiming>[] = performance.getEntriesByType('resource')
   // 设置资源加载的超时时间10s
-  const TIMEOUT: number = 1000 * 10;
+  const TIMEOUT: number = 1000 * 10
   const getLoadTime = (startTime: number | undefined, endTime: number | undefined) => {
-    return Number((Number(endTime) - Number(startTime)).toFixed(2));
+    return Number((Number(endTime) - Number(startTime)).toFixed(2))
   }
   // 超时列表
-  let timeoutList: TimeoutList[] = [];
+  let timeoutList: TimeoutList[] = []
   for (let i = 0; i < resourceTimes.length; i++) {
     if (getLoadTime(resourceTimes[i].startTime, resourceTimes[i].responseEnd) > TIMEOUT) {
-      let { name, nextHopProtocol, startTime, responseEnd, initiatorType } = resourceTimes[i];
+      let { name, nextHopProtocol, startTime, responseEnd, initiatorType } = resourceTimes[i]
       timeoutList.push({
-        name, nextHopProtocol, initiatorType,
+        name,
+        nextHopProtocol,
+        initiatorType,
         loadTime: getLoadTime(startTime, responseEnd)
-      });
+      })
     }
   }
   if (timeoutList.length == 0) {

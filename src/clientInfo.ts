@@ -7,7 +7,7 @@ export function getNetWork() {
     console.warn('不支持 navigator，无法获取网络情况！')
     return
   }
-  
+
   console.log('网络情况为：', navigator['connection'])
 }
 
@@ -23,8 +23,8 @@ export function getUserAgent() {
 
 /**
  * 使用 requestAnimationFrame 来计算页面的 fps
- * @param count 
- * @returns 
+ * @param count
+ * @returns
  */
 export function calculateFps(count: number): Promise<number> {
   return new Promise((resolve) => {
@@ -51,7 +51,8 @@ export function calculateFps(count: number): Promise<number> {
               fpsQueue.slice(5).reduce((sum, fps) => {
                 sum = sum + fps
                 return sum
-              }, 0) / (fpsQueue.length - 5),
+              }, 0) /
+                (fpsQueue.length - 5),
               2
             )
           )

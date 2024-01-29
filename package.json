@@ -9,7 +9,8 @@
     "build-types": "run-s build-temp build-api-types",
     "build-temp": "rimraf temp && tsc --emitDeclarationOnly --outDir temp -p ./tsconfig.types.json",
     "build-api-types": "api-extractor run && rimraf temp",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^23.0.3",
     "npm-run-all": "^4.1.5",
+    "prettier": "^3.2.4",
     "rimraf": "^3.0.2",
     "rollup": "^3.5.1",
     "rollup-plugin-terser": "^7.0.2",
