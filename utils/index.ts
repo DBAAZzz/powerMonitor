@@ -1,6 +1,13 @@
 export const UA = navigator.userAgent.toLowerCase()
 
-export const roundByFour = (num: number, digits = 4) => {
+export function objectKeyToString(obj: object): string {
+  const str = Object.entries(obj)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&')
+  return str
+}
+
+export function roundByFour(num: number, digits = 4) {
   try {
     return parseFloat(num.toFixed(digits))
   } catch (err) {

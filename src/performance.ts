@@ -26,7 +26,18 @@ export function getPerformance() {
   let timer: number | undefined
 
   let getTimes = () => {
-    const { fetchStart, domainLookupStart, domainLookupEnd, connectStart, connectEnd, domInteractive, domComplete, responseEnd, loadEventEnd } = getNavTimes()
+    const {
+      fetchStart,
+      domainLookupStart,
+      domainLookupEnd,
+      connectStart,
+      connectEnd,
+      secureConnectionStart,
+      domContentLoadedEventEnd,
+      responseEnd,
+      loadEventEnd
+    } = getNavTimes()
+
     // 如果 loadEventEnd 的值为 0 ，那么就定时
     if (loadEventEnd <= 0) {
       timer = window.setTimeout(() => {
@@ -38,19 +49,23 @@ export function getPerformance() {
     clearTimeout(timer)
 
     let times = {
-      dnsTime: domainLookupEnd - domainLookupStart, // dns查询耗时
+      dnsTime: domainLookupEnd - domainLookupStart, // DNS 查询耗时
       tcpTime: connectEnd - connectStart, // TCP 连接耗时
-      analysicsTime: domComplete - domInteractive, // 解析DOM耗时
-      domParse: domInteractive - responseEnd, // dom 解析时间
-      firstTime: loadEventEnd - fetchStart // 首屏时间
+      sslTime: connectEnd - secureConnectionStart, // SSL 连接耗时
+      domContentLoadedTime: domContentLoadedEventEnd - responseEnd, // DOMContentLoaded 耗时
+      assetsTime: loadEventEnd - domContentLoadedEventEnd, // 资源加载耗时
+      pageRenderTime: loadEventEnd - responseEnd, // 页面渲染耗时
+      firstTime: loadEventEnd - fetchStart // Load 耗时
     }
 
     let table = [
-      { 属性: 'dns查询耗时', ms: times.dnsTime },
+      { 属性: 'DNS 查询耗时', ms: times.dnsTime },
       { 属性: 'TCP 连接耗时', ms: times.tcpTime },
-      { 属性: '解析DOM耗时', ms: times.analysicsTime },
-      { 属性: 'DOM 解析时间', ms: times.domParse },
-      { 属性: '首屏时间', ms: times.firstTime }
+      { 属性: 'SSL 连接耗时', ms: times.sslTime },
+      { 属性: 'DOMContentLoaded 耗时', ms: times.domContentLoadedTime },
+      { 属性: '资源加载耗时', ms: times.assetsTime },
+      { 属性: '页面渲染耗时', ms: times.pageRenderTime },
+      { 属性: 'Load 耗时', ms: times.firstTime }
     ]
     console.table(table)
   }

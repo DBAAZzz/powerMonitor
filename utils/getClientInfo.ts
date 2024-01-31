@@ -1,16 +1,15 @@
 import { isNavigatorSupported } from 'utils/supported'
 import { roundByFour } from 'utils/index'
 
-// 获取网络情况
+/** 获取网络情况 */
 export function getNetWork() {
   if (!isNavigatorSupported()) {
     return
   }
-
-  console.log('网络情况为：', navigator['connection'])
+  return navigator['connection']
 }
 
-// 获取设备信息
+/** 获取设备信息 */
 export function getUserAgent() {
   if (!isNavigatorSupported()) {
     return
@@ -21,7 +20,7 @@ export function getUserAgent() {
 
 /**
  * 使用 requestAnimationFrame 来计算页面的 fps
- * @param count
+ * @param { number } count
  * @returns
  */
 export function calculateFps(count: number): Promise<number> {
@@ -63,13 +62,5 @@ export function calculateFps(count: number): Promise<number> {
     }
 
     calculate()
-  })
-}
-
-export function initClientInfo() {
-  getNetWork()
-  getUserAgent()
-  calculateFps(5).then((res) => {
-    console.log('页面的帧数为：', res)
   })
 }

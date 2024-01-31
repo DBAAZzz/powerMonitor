@@ -1,17 +1,17 @@
-enum ClientEnum {
+export enum ClientEnum {
   WEB = 'web',
   ANDROID = 'android',
   IOS = 'ios'
 }
 
 export type Log = {
+  /** 监控平台 */
   client: ClientEnum
-  logKey: 'network' | 'userAgent' | 'error'
   /** 日志等级 */
   level: 'info' | 'warning' | 'error'
   /** 日志信息 */
   message: string
-  extra?: string
+  extra?: any
 }
 
 export interface PerformanceEntryHandler {

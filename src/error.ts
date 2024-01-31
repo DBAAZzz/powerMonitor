@@ -1,10 +1,20 @@
+import { reportLog } from './report'
+import { ClientEnum } from 'types'
+
 export function handlerError(error: any) {
   if (error instanceof ErrorEvent) {
     console.log('JS错误')
     let { message, filename, lineno, colno } = error
     console.table({ message, filename, lineno, colno })
   } else if (error instanceof Event) {
-    console.log('资源加载错误', error)
+    console.log('资源加载错误')
+    reportLog({
+      client: ClientEnum.WEB,
+      level: 'error',
+      message: '资源加载错误',
+      // @ts-ignore
+      extra: error.target.tagName
+    })
   }
 }
 

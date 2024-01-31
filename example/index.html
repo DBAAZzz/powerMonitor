@@ -17,7 +17,14 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="../dist/powerMonitor.min.js"></script>
 <script>
-    new PowerMonitor()
+    PowerMonitor({
+        listenClick: true,
+        aliyunLog: {
+            project: 'monitor-web',
+            host: 'cn-guangzhou.log.aliyuncs.com',
+            logstore: 'logstore-example'
+        }
+    })
     function clickbutton() {
         console.log('点击了button')
         new Promise(() => {
