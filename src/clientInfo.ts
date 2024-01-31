@@ -4,7 +4,6 @@ import { roundByFour } from 'utils/index'
 // 获取网络情况
 export function getNetWork() {
   if (!isNavigatorSupported()) {
-    console.warn('不支持 navigator，无法获取网络情况！')
     return
   }
 
@@ -14,7 +13,6 @@ export function getNetWork() {
 // 获取设备信息
 export function getUserAgent() {
   if (!isNavigatorSupported()) {
-    console.warn('不支持 navigator，无法获取设备信息！')
     return
   }
   let { userAgent } = window.navigator
