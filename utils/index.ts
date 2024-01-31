@@ -35,7 +35,7 @@ export function normalizeNodeChain(path: any) {
 export function handleClick(event: any) {
   let path
   try {
-    path = event.path
+    path = event.path || []
   } catch (err) {
     path = []
   }

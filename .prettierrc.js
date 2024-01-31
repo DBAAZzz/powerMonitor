@@ -5,10 +5,10 @@
 module.exports = {
   /**
    * 换行宽度，当代码宽度达到多少时换行
-   * @default 180
+   * @default 120
    * @type {number}
    */
-  printWidth: 180,
+  printWidth: 120,
   /**
    * 缩进的空格数量
    * @default 2
