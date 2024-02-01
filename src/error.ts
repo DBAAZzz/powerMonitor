@@ -3,16 +3,20 @@ import { ClientEnum } from 'src/types'
 
 export function handlerError(error: any) {
   if (error instanceof ErrorEvent) {
-    console.log('JS错误')
     let { message, filename, lineno, colno } = error
-    console.table({ message, filename, lineno, colno })
+    reportLog({
+      client: ClientEnum.WEB,
+      message,
+      level: 'error',
+      timestamp: +new Date()
+    })
   } else if (error instanceof Event) {
     console.log('资源加载错误')
     reportLog({
       client: ClientEnum.WEB,
       level: 'error',
       message: '资源加载错误',
-      createTime: +new Date(),
+      timestamp: +new Date(),
       // @ts-ignore
       extra: error.target.tagName
     })
@@ -34,7 +38,12 @@ export function addListenNormalError() {
 export function addListenPromise() {
   window.addEventListener('unhandledrejection', (error) => {
     let { reason } = error
-    console.log('promise error', reason.stack || reason.message)
+    reportLog({
+      client: ClientEnum.WEB,
+      message: encodeURIComponent(reason.stack || reason.message),
+      level: 'error',
+      timestamp: +new Date()
+    })
   })
 }
 

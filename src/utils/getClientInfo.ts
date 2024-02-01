@@ -4,18 +4,25 @@ import { roundByFour } from 'src/utils/index'
 /** 获取网络情况 */
 export function getNetWork() {
   if (!isNavigatorSupported()) {
-    return
+    return '浏览器不支持navigator'
   }
   return navigator['connection']
 }
 
 /** 获取设备信息 */
-export function getUserAgent() {
+export function getUserAgent(): string {
   if (!isNavigatorSupported()) {
-    return
+    return '浏览器不支持navigator'
   }
   let { userAgent } = window.navigator
-  console.log('设备信息为：', userAgent)
+  return userAgent
+}
+
+/** 获取设备是否在线 */
+export function getNetworkOnline(): boolean {
+  if (!isNavigatorSupported()) return true
+  let badNetworkType = ['2g']
+  return window.navigator.onLine && !badNetworkType.includes(getNetWork().effectiveType)
 }
 
 /**

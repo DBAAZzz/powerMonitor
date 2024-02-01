@@ -18,6 +18,7 @@
 <script src="../dist/powerMonitor.min.js"></script>
 <script>
     PowerMonitor({
+        projectKey: 'example-web',
         listenClick: true,
         aliyunLog: {
             project: 'monitor-web',
@@ -27,6 +28,7 @@
     })
     function clickbutton() {
         console.log('点击了button')
+        a = 2
         new Promise(() => {
             s
         })
@@ -46,18 +48,18 @@
 </script>
 
 <body>
-    <img src="https://w.wallhaven.cc/full/l3/wallhaven-l3kkzq.jpg" />
-    <img
-        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/12/16/16f0eac77d332a99~tplv-t2oaga2asx-no-mark:100:100:100:100.awebp" />
+    <!-- <img src="https://w.wallhaven.cc/full/l3/wallhaven-l3kkzq.jpg" /> -->
+    <!-- <img
+        src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2019/12/16/16f0eac77d332a99~tplv-t2oaga2asx-no-mark:100:100:100:100.awebp" /> -->
     <div class="button-container">
         <div class="button-box">
             <button id="buttonId" class="button" onclick="clickbutton()">click</button>
         </div>
     </div>
-    <img src="http://139.196.100.226/images/wallhaven-8or2yj.jpg" />
+    <!-- <img src="http://139.196.100.226/images/wallhaven-8or2yj.jpg" /> -->
     <button class="button" onclick="clickbutton2()">点击 我</button>
     <img id="img">
-    <img src="/baidu.com/test.png" alt="图片加载中" />
+    <!-- <img src="/baidu.com/test.png" alt="图片加载中" /> -->
 </body>
 
 

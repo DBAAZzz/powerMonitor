@@ -1,5 +1,6 @@
-import { TimeoutList } from 'src/types/index'
+import { ClientEnum, TimeoutList } from 'src/types/index'
 import observe from 'src/utils/observe'
+import { reportLog } from './report'
 import { isPerformanceObserverSupported, isPerformanceSupported } from 'src/utils/supported'
 
 export function getNavTimes() {
@@ -49,13 +50,13 @@ export function getPerformance() {
     clearTimeout(timer)
 
     let times = {
-      dnsTime: domainLookupEnd - domainLookupStart, // DNS 查询耗时
-      tcpTime: connectEnd - connectStart, // TCP 连接耗时
-      sslTime: connectEnd - secureConnectionStart, // SSL 连接耗时
-      domContentLoadedTime: domContentLoadedEventEnd - responseEnd, // DOMContentLoaded 耗时
-      assetsTime: loadEventEnd - domContentLoadedEventEnd, // 资源加载耗时
-      pageRenderTime: loadEventEnd - responseEnd, // 页面渲染耗时
-      firstTime: loadEventEnd - fetchStart // Load 耗时
+      dnsTime: Math.ceil(domainLookupEnd - domainLookupStart), // DNS 查询耗时
+      tcpTime: Math.ceil(connectEnd - connectStart), // TCP 连接耗时
+      sslTime: Math.ceil(connectEnd - secureConnectionStart), // SSL 连接耗时
+      domContentLoadedTime: Math.ceil(domContentLoadedEventEnd - responseEnd), // DOMContentLoaded 耗时
+      assetsTime: Math.ceil(loadEventEnd - domContentLoadedEventEnd), // 资源加载耗时
+      pageRenderTime: Math.ceil(loadEventEnd - responseEnd), // 页面渲染耗时
+      loadTime: Math.ceil(loadEventEnd - fetchStart) // Load 耗时
     }
 
     let table = [
@@ -65,8 +66,17 @@ export function getPerformance() {
       { 属性: 'DOMContentLoaded 耗时', ms: times.domContentLoadedTime },
       { 属性: '资源加载耗时', ms: times.assetsTime },
       { 属性: '页面渲染耗时', ms: times.pageRenderTime },
-      { 属性: 'Load 耗时', ms: times.firstTime }
+      { 属性: 'Load 耗时', ms: times.loadTime }
     ]
+
+    reportLog({
+      client: ClientEnum.WEB,
+      level: 'info',
+      message: '页面性能',
+      timestamp: +new Date(),
+      ...times
+    })
+
     console.table(table)
   }
 
@@ -74,7 +84,7 @@ export function getPerformance() {
 }
 
 /**
- * First Contentful Paint （最大内容绘制）
+ * First Contentful Paint
  * 浏览器开始渲染 dom 元素，包括任何 text、images、非空白 canvas 和 svg
  * @returns
  */
@@ -150,7 +160,7 @@ export function getFID(): Promise<PerformanceEntry> {
  * 首次绘制，即浏览器绘制页面第一个像素的时间
  * @returns
  */
-export function getFP(): Promise<PerformanceEntry> | undefined {
+export function getFP(): Promise<PerformanceEntry> {
   return new Promise((resolve, reject) => {
     if (!isPerformanceObserverSupported()) {
       if (!isPerformanceSupported()) {
@@ -182,11 +192,11 @@ export function getFP(): Promise<PerformanceEntry> | undefined {
 /**
  * Cumulative Layout Shift （累计布局偏移）
  * CLS 是 Google 衡量网页加载和交互时发生的布局偏移总量，即意外移动网页主要内容的布局偏移数量
- * Google 建议 CLS 分数为 0.1 或 耕地
+ * Google 建议 CLS 分数为 0.1 或 更低
  * @param cls
  * @returns
  */
-export function getCLS(cls: any): Promise<PerformanceObserver> | undefined {
+export function getCLS(cls: any): Promise<{ value: number }> {
   return new Promise((resove, reject) => {
     if (!isPerformanceObserverSupported()) {
       reject('browser do not support performanceObserver')
@@ -208,10 +218,10 @@ export function getCLS(cls: any): Promise<PerformanceObserver> | undefined {
 /**
  * 获取资源的加载情况
  */
-export function getSourceInfo() {
+export function getResourceInfo() {
   const resourceTimes: Partial<PerformanceResourceTiming>[] = performance.getEntriesByType('resource')
   // 设置资源加载的超时时间10s
-  const TIMEOUT: number = 1000 * 10
+  const TIMEOUT = 1000 * 10
   const getLoadTime = (startTime: number | undefined, endTime: number | undefined) => {
     return Number((Number(endTime) - Number(startTime)).toFixed(2))
   }
@@ -236,24 +246,67 @@ export function getSourceInfo() {
   }
 }
 
-export function initPerformance() {
+/** 上报页面性能 */
+export function reportPerformance() {
   window.addEventListener('load', () => {
     getPerformance()
-    getSourceInfo()
+    getResourceInfo()
     getFCP().then((res) => {
       console.log('getFCP', res)
+      reportLog({
+        client: ClientEnum.WEB,
+        level: 'info',
+        message: '页面性能-First Contentful Paint',
+        type: 'fcp',
+        timestamp: +new Date(),
+        fcp: Math.ceil(res.startTime)
+      })
     })
     getLCP().then((res) => {
       console.log('getLCP', res)
+      reportLog({
+        client: ClientEnum.WEB,
+        level: 'info',
+        message: '页面性能-layout-shift',
+        type: 'lcp',
+        timestamp: +new Date(),
+        // @ts-ignore
+        tagName: res.element.tagName,
+        lcp: Math.ceil(res.startTime)
+      })
     })
     getFID().then((res) => {
       console.log('getFID', res)
+      reportLog({
+        client: ClientEnum.WEB,
+        level: 'info',
+        message: '页面性能-First Input Delay',
+        type: 'fid',
+        timestamp: +new Date(),
+        fid: Math.ceil(res.startTime)
+      })
     })
     getFP()?.then((res) => {
       console.log('getFP', res)
+      reportLog({
+        client: ClientEnum.WEB,
+        level: 'info',
+        message: '页面性能-First Paint',
+        type: 'fp',
+        timestamp: +new Date(),
+        fp: Math.ceil(res.startTime)
+      })
     })
-    getCLS({ value: 0 })?.then((res) => {
+    getCLS({ value: 0 }).then((res) => {
       console.log('getCLS', res)
+      reportLog({
+        client: ClientEnum.WEB,
+        level: 'info',
+        message: '页面性能-First Paint',
+        type: 'fid',
+        timestamp: +new Date(),
+        cls: Math.ceil(res.value)
+      })
     })
   })
 }

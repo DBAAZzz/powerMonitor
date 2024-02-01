@@ -1,5 +1,3 @@
-import { Options } from 'src/types'
-
-let config: Options = {}
+let config = {}
 
 export default config

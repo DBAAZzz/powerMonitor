@@ -2,7 +2,7 @@
   /* 访问 https://aka.ms/tsconfig.json 以阅读有关此文件的更多信息 */
   "compilerOptions": {
     /* 基本选项 */
-    "lib": ["es6", "dom", "es2017"],
+    "lib": ["ES6", "DOM", "ES2017", "ESNext"],
     "module": "ESNext" /* 指定模块代码生成：“none”、“commonjs”、“amd”、“system”、“umd”、“es2015”、“es2020”或“ESNext”。 */,
     "declaration": false /* 生成相应的 .d.ts 文件。 */,
     "allowJs": true /* 允许编译JavaScript文件 */,

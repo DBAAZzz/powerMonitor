@@ -12,8 +12,10 @@ export type Log = {
   /** 日志信息 */
   message: string
   /** 日志时间 */
-  createTime: string | number
+  timestamp: string | number
+  type?: string
   extra?: any
+  [key: string]: any
 }
 
 export interface PerformanceEntryHandler {
@@ -38,6 +40,8 @@ export interface AliyunTracking {
 }
 
 export interface Options {
+  /** 项目key */
+  projectKey: string
   dns?: string
   listenClick?: boolean
   aliyunLog?: AliyunTracking
