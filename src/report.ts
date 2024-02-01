@@ -1,6 +1,6 @@
 import config from './config'
-import { objectKeyToString } from 'utils'
-import type { AliyunTracking, Log } from 'types'
+import { objectKeyToString } from 'src/utils'
+import type { AliyunTracking, Log } from 'src/types'
 
 function getAliyunReportUrl(opts: AliyunTracking) {
   return `http://${opts.project}.${opts.host}/logstores/${opts.logstore}/track?APIVersion=0.6.0&`

@@ -1,5 +1,5 @@
 import { reportLog } from './report'
-import { ClientEnum } from 'types'
+import { ClientEnum } from 'src/types'
 
 export function handlerError(error: any) {
   if (error instanceof ErrorEvent) {
@@ -12,6 +12,7 @@ export function handlerError(error: any) {
       client: ClientEnum.WEB,
       level: 'error',
       message: '资源加载错误',
+      createTime: +new Date(),
       // @ts-ignore
       extra: error.target.tagName
     })

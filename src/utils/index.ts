@@ -57,17 +57,3 @@ export function handleClick(event: any) {
     dom: targetMessage
   }
 }
-
-/**
- * 将对象转化成字符串
- * { a: 1, b: 2 } => a=1&b=2
- * @param params
- * @returns
- */
-export function handleParames(params: Object) {
-  let result = ''
-  Object.keys(params).forEach((key: any, i: number) => {
-    result = result + `${key}=${params[key]}` + (i < Object.keys(params).length - 1 ? '&' : '')
-  })
-  return result
-}

@@ -1,4 +1,4 @@
-import { handleClick } from '../utils/index'
+import { handleClick } from './utils/index'
 import { proxyXhr, proxyFetch } from './lib/proxyHandler'
 
 export function addListenClickEvent() {

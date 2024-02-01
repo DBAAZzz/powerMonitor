@@ -1,5 +1,5 @@
-import { isNavigatorSupported } from 'utils/supported'
-import { roundByFour } from 'utils/index'
+import { isNavigatorSupported } from 'src/utils/supported'
+import { roundByFour } from 'src/utils/index'
 
 /** 获取网络情况 */
 export function getNetWork() {

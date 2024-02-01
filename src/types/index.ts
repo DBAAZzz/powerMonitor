@@ -11,6 +11,8 @@ export type Log = {
   level: 'info' | 'warning' | 'error'
   /** 日志信息 */
   message: string
+  /** 日志时间 */
+  createTime: string | number
   extra?: any
 }
 

@@ -1,6 +1,6 @@
-import { TimeoutList } from 'types/index'
-import observe from 'utils/observe'
-import { isPerformanceObserverSupported, isPerformanceSupported } from 'utils/supported'
+import { TimeoutList } from 'src/types/index'
+import observe from 'src/utils/observe'
+import { isPerformanceObserverSupported, isPerformanceSupported } from 'src/utils/supported'
 
 export function getNavTimes() {
   let navTimes: any

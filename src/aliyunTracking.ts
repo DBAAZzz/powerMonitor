@@ -1,6 +1,6 @@
 import WebTrackerBrowser from '@aliyun-sls/web-track-browser'
 import SlsTracker from '@aliyun-sls/web-track-browser'
-import { AliyunTracking } from 'types'
+import { AliyunTracking } from 'src/types'
 
 /** 初始化阿里云Web Tracking JavaScript SDK */
 export function initAliyunTracking(opts: AliyunTracking): WebTrackerBrowser {
